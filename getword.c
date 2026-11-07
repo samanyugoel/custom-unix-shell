@@ -12,7 +12,7 @@ char *getword(int x, char *input){
         x++;
         len++;
     }
-    char *arr = malloc(sizeof(char) * (len + 1));
+    char *arr = malloc(sizeof(char) * (len + 1)); //used this instead of arr[] since the array gets destroyed when returned (out of scope), giving a segmentation fault
     //changed allocation logic since it caused a buffer overflow before and leaves one space for '\0' so the string always ends properly
     if (arr == NULL){
         fprintf(stderr, "Memory Allocation Error\n");

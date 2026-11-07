@@ -27,18 +27,20 @@ int main(int argc, char *argv[])
         if (input == NULL || args == NULL){
             //error handling for allocation errors
             fprintf(stderr, "Memory Allocation Error.\n");
+            cleanup(input,args,z);
             return 1;
         }
 
 
         if (fgets(input, INPUT_BUFFER * sizeof(char), stdin) == NULL){
-            //frees the memory if error with fetching the user input
+            //frees the memory if error with fetching the user input like EOF
             cleanup(input, args, z);
             return 0;
         }
-
+        
+        // tokenize the line
         while (input[x] != '\0' && input[x] != '\n'){
-           while (input[x] != '\0' && isspace((unsigned char)input[x])) {
+            while (input[x] != '\0' && isspace((unsigned char)input[x])) {
                 x++;
                 //skips the spaces for proper tokenization
             }
@@ -104,55 +106,56 @@ int main(int argc, char *argv[])
                     cleanup(input, args, z);
                     exit(0);
                 }
-            if (strcmp(args[0], "cd") == 0) {
-                char *targetdir = args[1];
 
-                if (targetdir == NULL){
-                    targetdir = getenv("HOME");
-                }
+                if (strcmp(args[0], "cd") == 0) {
+                    char *targetdir = args[1];
 
-                if (chdir(targetdir) != 0){
-                    perror("cd");
+                    if (targetdir == NULL){
+                        targetdir = getenv("HOME");
+                    }
+
+                    if (chdir(targetdir) != 0){
+                        perror("cd");
+                    }
+                    cleanup(input, args, z);
+                    continue;
                 }
-                cleanup(input, args, z);
-                continue;
-            }
 
                 int pid = fork();
             //fork the process for running the exec() command
 
-            if (pid == -1){
-                perror("fork");
-                cleanup(input, args, z);
-                continue;
-            }
-            if (pid == 0){
-                //child process
-                //gets destroyed after exec() runs without error
-                run_command(args);
-                cleanup(input, args, z);
-                exit(0);
+                if (pid == -1){
+                    perror("fork");
+                    cleanup(input, args, z);
+                    continue;
+                }
+                if (pid == 0){
+                    //child process
+                    //gets destroyed after exec() runs without error
+                    run_command(args);
+                    cleanup(input, args, z);
+                    exit(0);
 
-            }
+                }
 
-            else {
-                //parent process
-                //if parent process was destroyed instead of the child process, the shell would have destroyed itself as well, and would result in only letting one command run
-                int statusofexec;
-                wait(&statusofexec);
-                if(WIFEXITED(statusofexec)){
-                    int statuscode = WEXITSTATUS(statusofexec);
-                    //gives status code depending on whether the child process exited or not
-                    if (statusofexec != 0){
-                        fprintf(stderr, "Command failed with status code %d.\n", statuscode);
+                else {
+                    //parent process
+                    //if parent process was destroyed instead of the child process, the shell would have destroyed itself as well, and would result in only letting one command run
+                    int statusofexec;
+                    wait(&statusofexec);
+                    if(WIFEXITED(statusofexec)){
+                        int statuscode = WEXITSTATUS(statusofexec);
+                        //gives status code depending on whether the child process exited or not
+                        if (statusofexec != 0){
+                            fprintf(stderr, "Command failed with status code %d.\n", statuscode);
+                        }
                     }
                 }
-            }
 
-        }
+            }
         cleanup(input, args, z);
         //cleans up each time the infinite loop runs
-    }
+        }
     }
     return 0;
 }
