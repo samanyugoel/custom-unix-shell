@@ -145,8 +145,8 @@ int main(int argc, char *argv[])
                     wait(&statusofexec);
                     if(WIFEXITED(statusofexec)){
                         int statuscode = WEXITSTATUS(statusofexec);
-                        //gives status code depending on whether the child process exited or not
-                        if (statusofexec != 0){
+                        //gives status code deiending on whether the child process exited or not
+                        if (statuscode != 0){
                             fprintf(stderr, "Command failed with status code %d.\n", statuscode);
                         }
                     }
