@@ -8,7 +8,7 @@ A custom-built shell created in C as a learning project which demonstrates dynam
 
 * **Dynamic Memory Allocation** - Allocates memory for commands and argument lists of varying lengths using `malloc` and dynamic `realloc` arrays.
 
-* **Memory Management** - Safely handles the allocated memory and freeing it wherever required using a `cleanup()` function for easy memory cleaup.
+* **Memory Management** - Safely handles the allocated memory and freeing it wherever required using a `cleanup()` function for easy memory cleanup.
  
 * **Command Execution** - Safely forks child processes and executes system executables (e.g., `ping`, `grep`, `mkdir`, etc).
 
