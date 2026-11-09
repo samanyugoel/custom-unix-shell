@@ -27,7 +27,7 @@ A custom-built shell created in C as a learning project which demonstrates dynam
 
 * **Modular Architecture** - Functions are separated out into distinct files for their particular uses, in order to improve readability, maintainance, and structure of the code.
 
-## Known Limitations
+### Known Limitations
 
 - Supports a single pipe between two commands.
 - No input/output redirection (`>`, `<`).
